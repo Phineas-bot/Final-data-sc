@@ -91,10 +91,13 @@ Collect through questionnaire:
 
 #### Deliverables:
 
-- Raw anonymized dataset (CSV/Excel)
-- Consent form template (PDF)
-- Data collection questionnaire (PDF)
-- Data collection report (1 page): sampling strategy, challenges, quality assurance
+Raw anonymized dataset (CSV/Excel)
+
+Consent form template (PDF)
+
+Data collection questionnaire (PDF)
+
+* Data collection report (1 page): sampling strategy, challenges, quality assurance
 
 ---
 
