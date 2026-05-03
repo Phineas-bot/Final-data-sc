@@ -42,7 +42,7 @@ python -m src.run_pipeline --skip-eda
 - outputs/eda_summary.csv
 - outputs/figures/*.png
 - outputs/modeling/model_comparison.csv
-- models/best_model.joblib
+- models/best_model.pkl
 - outputs/interpretation/feature_importance.csv
 
 ## Notes

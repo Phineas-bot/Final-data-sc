@@ -160,7 +160,7 @@ def run_modeling(features_path: Path, output_dir: Path, model_dir: Path) -> None
         raise RuntimeError("No model was trained successfully.")
 
     model_dir.mkdir(parents=True, exist_ok=True)
-    joblib.dump(best_pipeline, model_dir / "best_model.joblib")
+    joblib.dump(best_pipeline, model_dir / "best_model.pkl")
 
     with (output_dir / "best_model.json").open("w", encoding="utf-8") as handle:
         json.dump({"model": best_model_name, "f1_macro": best_score}, handle, indent=2)

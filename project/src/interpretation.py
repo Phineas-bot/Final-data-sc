@@ -99,7 +99,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         type=Path,
-        default=DEFAULT_PATHS.project_root / "models" / "best_model.joblib",
+        default=DEFAULT_PATHS.project_root / "models" / "best_model.pkl",
         help="Input trained model path.",
     )
     parser.add_argument(

@@ -2,42 +2,100 @@
 
 ## Executive Summary
 
-We built a pipeline to classify mobile money users into low, medium, and high activity segments using SMS transaction histories. The decision tree model achieved a macro F1 of 0.5556. The strongest drivers were transaction volume and activity score. Recommendations focus on retention rewards, merchant bundles, and reducing transaction friction.
+This project constructs an end-to-end pipeline to classify mobile money users into low, medium, and high activity segments using SMS transaction history. The decision tree model achieved a macro F1 score of 0.5556 on the validation sample, with the strongest predictors being total transaction volume and a composite activity score.
+
+Key deliverables:
+- Cleaned transaction dataset from raw SMS exports.
+- User-level feature engineering and segmentation.
+- EDA visualizations that highlight usage patterns.
+- Comparative modeling and selection of the best classifier.
+- Interpretation and business recommendations for feature-driven engagement.
 
 ## Introduction
 
-Mobile money is a primary financial channel in Cameroon. Understanding usage patterns supports segmentation and service improvement. Our objective is to classify users into activity tiers based on transaction behavior.
+Mobile money services are increasingly important in financial inclusion and daily transaction behavior. This analysis aims to segment users based on usage intensity and provide models and recommendations that can support customer targeting and service improvement.
 
 ## Data Collection Methodology
 
-We collected anonymized SMS exports from MobileMoney and OrangeMoney and paired them with participant questionnaire responses. Participants provided consent and were assigned unique IDs to protect privacy.
+Raw SMS exports were collected from MobileMoney and OrangeMoney sources, then paired with project documentation including consent forms and questionnaire summaries. Each data row contains anonymized `user_id`, `datetime`, `transaction_type`, `amount`, and message `content`.
+
+Privacy measures:
+- All user identifiers are anonymized.
+- No personal identifiers are included in the cleaned dataset.
+- Data storage and handling follow secure project standards.
 
 ## Data Cleaning and Preparation
 
-We standardized multilingual headers, removed duplicates, filtered OTP and promotional messages, and retained failed attempts as activity signals. Balance and adjustment messages were retained as indicators of engagement.
+The cleaning process transformed raw SMS logs into an analysis-ready dataset by:
+- Normalizing headers from both `.csv` and `.xlsx` sources.
+- Standardizing dates and text content.
+- Tagging transaction types and failed status from message text.
+- Removing OTP, promotional messages, and duplicate records.
+- Preserving activity signals from balance checks, adjustments, and failed attempts.
+
+The cleaned dataset contains 2,261 rows out of 25,996 raw records, representing a focused set of valid mobile money activity events.
 
 ## Exploratory Data Analysis
 
-EDA shows a clear separation between low and high activity users driven by transaction volume and frequency. Weekend usage is higher for active users. Failed attempts correlate with higher activity.
+EDA reveals the following patterns:
+- User activity is imbalanced, with a minority of users driving the highest volume.
+- Active users show a strong relationship between transaction frequency and total volume.
+- Failed transactions occur more often among higher activity users, suggesting retry behavior or friction.
+- Weekend activity is a distinguishing pattern for medium and high activity segments.
+- Correlation analysis confirms that normalized activity features are effective for segmentation.
 
 ## Modeling Approach
 
-We trained logistic regression, decision tree, and random forest classifiers. Macro F1 was used due to class imbalance. The decision tree model performed best.
+Three classifiers were evaluated:
+- Logistic Regression
+- Decision Tree
+- Random Forest
+
+A macro F1 score was chosen as the primary evaluation metric because it treats each activity class equally and accounts for the imbalanced distribution.
+
+Feature preparation included:
+- Scaling numeric features with `StandardScaler`.
+- One-hot encoding categorical features where needed.
+- Dropping metadata columns such as `user_id` and threshold values.
 
 ## Results and Interpretation
 
-Top features: total_transaction_volume and activity_score. These capture sustained usage and high-value behavior. Example predictions align with these drivers.
+Model performance results:
+- Decision Tree: accuracy = 0.6667, precision (macro) = 0.50, recall (macro) = 0.6667, F1 (macro) = 0.5556
+- Random Forest: accuracy = 0.6667, precision (macro) = 0.50, recall (macro) = 0.6667, F1 (macro) = 0.5556
+- Logistic Regression: accuracy = 0.0, precision = 0.0, recall = 0.0, F1 = 0.0
 
-## Business Insights and Recommendations
+Based on these results, the Decision Tree model was selected for its strong balanced performance and interpretability.
 
-- Reward high-volume users to improve retention.
-- Offer merchant bundles for payment-heavy users.
-- Use failed attempts to detect friction and improve UX.
+## Interpretation and Key Drivers
+
+Top feature drivers include:
+- `total_transaction_volume`
+- `activity_score`
+
+These features summarize sustained usage and user commitment, making them reliable predictors of segment membership. Secondary signals such as failed attempts and weekend activity provide additional context on engagement and service friction.
+
+## Business Recommendations
+
+The analysis supports the following actions:
+- Offer retention incentives to high-volume, high-frequency users.
+- Design merchant or payment bundles for customers with frequent payment behavior.
+- Monitor failed transaction attempts to reduce friction and improve the customer experience.
+- Use weekend activity trends to tailor promotions for after-hours mobile money usage.
+- Provide educational support for low activity users to increase adoption.
 
 ## Limitations and Ethics
 
-Sample size at the user level is small, and SMS parsing has edge cases. The model should not be used for high-stakes decisions without further validation.
+Limitations:
+- The sample size is limited and model performance may vary with more data.
+- SMS parsing can misclassify edge cases due to mixed language and varying message formats.
+- The model is based solely on transactional behavior and does not include demographic or contextual features.
+
+Ethical guidance:
+- Use model outputs as segmentation signals, not as final decisions.
+- Avoid deploying predictions for credit scoring or other high-stakes uses without further validation.
+- Maintain data confidentiality and avoid re-identification risk.
 
 ## Conclusion
 
-The project delivers an end-to-end pipeline from SMS ingestion to classification. Expanding the participant pool and adding demographic features will strengthen future versions.
+This submission delivers a complete analytic workflow from raw SMS exports to user-level classification and business recommendations. Future enhancements should include a larger dataset, demographic fairness analysis, and temporal sequence modeling to improve prediction quality and robustness.
