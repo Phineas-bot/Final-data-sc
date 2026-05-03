@@ -140,6 +140,10 @@ def classify_transaction(text: str | float | int | None) -> str:
     if text is None or (isinstance(text, float) and np.isnan(text)):
         return "other"
     lowered = str(text).lower()
+    if "solde" in lowered or "balance" in lowered:
+        return "balance"
+    if "adjustment" in lowered or "ajustement" in lowered:
+        return "adjustment"
     if "recu" in lowered or "received" in lowered:
         return "receive"
     if "retrait" in lowered or "withdraw" in lowered:

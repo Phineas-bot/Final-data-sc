@@ -12,6 +12,10 @@ from src.config import DEFAULT_PATHS
 
 
 AIRTIME_RE = re.compile(r"\bairtime\b", re.IGNORECASE)
+BALANCE_RE = re.compile(r"\b(solde|balance)\b", re.IGNORECASE)
+ADJUSTMENT_RE = re.compile(r"\badjustment|ajustement\b", re.IGNORECASE)
+OTP_RE = re.compile(r"\b(code|otp|login|verifier|verification)\b", re.IGNORECASE)
+PROMO_RE = re.compile(r"\b(bonus|promo|promotion|cadeau|win|gagner|scholarship)\b", re.IGNORECASE)
 FAILED_RE = re.compile(
     r"failed|rejected|echec|echoue|annule|canceled|cancelled",
     re.IGNORECASE,
@@ -43,6 +47,10 @@ def assign_transaction_type(row: pd.Series) -> str:
     current = normalize_text(row.get("transaction_type"))
     if AIRTIME_RE.search(content):
         return "airtime"
+    if BALANCE_RE.search(content):
+        return "balance"
+    if ADJUSTMENT_RE.search(content):
+        return "adjustment"
     return current or "other"
 
 
@@ -70,13 +78,24 @@ def clean_transactions(interim: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, f
         keep="first",
     )
 
-    df = df[df["status"] == "success"]
+    df["is_otp"] = df["content"].apply(lambda text: bool(OTP_RE.search(normalize_text(text))))
+    df["is_promo"] = df["content"].apply(lambda text: bool(PROMO_RE.search(normalize_text(text))))
+    df = df[~df["is_otp"] & ~df["is_promo"]]
 
-    keep_types = {"receive", "withdraw", "transfer", "payment", "airtime"}
+    keep_types = {
+        "receive",
+        "withdraw",
+        "transfer",
+        "payment",
+        "airtime",
+        "balance",
+        "adjustment",
+    }
     df = df[df["transaction_type"].isin(keep_types)]
 
-    df = df[(df["amount"].fillna(0) >= 0)]
-    df = df.dropna(subset=["amount"])
+    df.loc[(df["transaction_type"] == "balance") & (df["amount"].isna()), "amount"] = 0
+    df = df[df["amount"].fillna(0) >= 0]
+    df = df[~df["amount"].isna() | (df["transaction_type"] == "balance")]
 
     summary = {
         "rows_before": float(pre_count),
