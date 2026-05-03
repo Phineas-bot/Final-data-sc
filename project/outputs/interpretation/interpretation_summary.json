@@ -1,15 +1,15 @@
 {
   "top_features": [
-    "freq_norm",
-    "activity_score",
-    "avg_transaction_amount",
     "total_transaction_volume",
+    "activity_score",
     "total_transactions",
-    "withdraw_amount",
+    "failed_transactions",
     "deposit_amount",
+    "withdraw_amount",
+    "avg_transaction_amount",
     "transfer_amount",
     "payment_amount",
-    "business_txn_count"
+    "weekend_txn_count"
   ],
   "note": "Importance derived from model coefficients or tree importances."
 }

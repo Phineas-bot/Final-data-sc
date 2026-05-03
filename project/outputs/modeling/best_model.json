@@ -1,4 +1,4 @@
 {
   "model": "decision_tree",
-  "f1_macro": 1.0
+  "f1_macro": 0.5555555555555555
 }

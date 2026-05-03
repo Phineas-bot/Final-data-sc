@@ -40,6 +40,7 @@ def flag_business_usage(df: pd.DataFrame) -> pd.Series:
 def compute_user_features(df: pd.DataFrame) -> pd.DataFrame:
     df = add_time_fields(df)
     df["is_business_txn"] = flag_business_usage(df)
+    df["is_failed"] = df["status"].astype(str).str.lower().eq("failed")
 
     base = df.groupby("user_id")
 
@@ -47,6 +48,7 @@ def compute_user_features(df: pd.DataFrame) -> pd.DataFrame:
         total_transactions=("amount", "count"),
         total_transaction_volume=("amount", "sum"),
         avg_transaction_amount=("amount", "mean"),
+        failed_transactions=("is_failed", "sum"),
         deposit_amount=("amount", lambda s: s[df.loc[s.index, "transaction_type"] == "receive"].sum()),
         withdraw_amount=("amount", lambda s: s[df.loc[s.index, "transaction_type"] == "withdraw"].sum()),
         transfer_amount=("amount", lambda s: s[df.loc[s.index, "transaction_type"] == "transfer"].sum()),
@@ -65,6 +67,7 @@ def compute_user_features(df: pd.DataFrame) -> pd.DataFrame:
     )
     summary["weekend_ratio"] = summary["weekend_txn_count"] / summary["total_transactions"]
     summary["weekend_activity"] = (summary["weekend_ratio"] >= 0.2).astype(int)
+    summary["failed_ratio"] = summary["failed_transactions"] / summary["total_transactions"].replace(0, np.nan)
 
     payment_ratio = summary["payment_amount"] / summary["total_transaction_volume"].replace(0, np.nan)
     summary["business_usage"] = (
