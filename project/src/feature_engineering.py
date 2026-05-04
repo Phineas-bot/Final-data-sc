@@ -37,6 +37,28 @@ def flag_business_usage(df: pd.DataFrame) -> pd.Series:
     return text.str.contains(BUSINESS_RE)
 
 
+def load_demographics() -> pd.DataFrame | None:
+    demographics_path = DEFAULT_PATHS.raw_dir / "demographics.csv"
+    if not demographics_path.exists():
+        logging.warning("Demographics file not found, proceeding without demographics")
+        return None
+
+    demo_df = pd.read_csv(demographics_path)
+    mapping_path = DEFAULT_PATHS.processed_dir / "user_id_map.csv"
+    if mapping_path.exists() and "original_user_id" in pd.read_csv(mapping_path).columns:
+        id_map = pd.read_csv(mapping_path)
+        demo_df = demo_df.merge(
+            id_map,
+            left_on="user_id",
+            right_on="original_user_id",
+            how="left",
+        )
+        demo_df["user_id"] = demo_df["user_id_y"].fillna(demo_df["user_id_x"])
+        demo_df = demo_df[["user_id", "age", "gender", "location", "profession"]]
+
+    return demo_df
+
+
 def compute_user_features(df: pd.DataFrame) -> pd.DataFrame:
     df = add_time_fields(df)
     df["is_business_txn"] = flag_business_usage(df)
@@ -73,6 +95,11 @@ def compute_user_features(df: pd.DataFrame) -> pd.DataFrame:
     summary["business_usage"] = (
         (summary["business_txn_count"] > 0) | (payment_ratio.fillna(0) >= 0.3)
     ).astype(int)
+
+    demo_df = load_demographics()
+    if demo_df is not None:
+        summary = summary.merge(demo_df, on="user_id", how="left")
+        logging.info("Demographics merged into features")
 
     return summary
 

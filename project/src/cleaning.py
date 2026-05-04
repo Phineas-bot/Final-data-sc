@@ -21,6 +21,15 @@ FAILED_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Anonymization patterns
+NAME_RE = re.compile(r"\b[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)+\b")  # Proper names with at least two words
+PHONE_RE = re.compile(r"\b\d{8,12}\b")  # Phone numbers
+TRANSACTION_ID_RE = re.compile(
+    r"\b(?:transaction\s*id|identifiant\s+de\s+transaction|id\s+de\s+transaction|financial\s+transaction\s+id|external\s+transaction\s+id)\b[:\s-]*([A-Za-z0-9-]+)",
+    re.IGNORECASE,
+)
+EMAIL_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")  # Emails
+
 
 def setup_logging() -> None:
     logging.basicConfig(
@@ -54,6 +63,26 @@ def assign_transaction_type(row: pd.Series) -> str:
     return current or "other"
 
 
+def anonymize_content(content: str) -> str:
+    """Remove or redact sensitive information from transaction content."""
+    if not isinstance(content, str):
+        return content
+
+    # Replace transaction identifiers with a stable placeholder.
+    content = TRANSACTION_ID_RE.sub("ID_MASKED", content)
+
+    # Replace phone numbers with a generic placeholder.
+    content = PHONE_RE.sub("XXXX", content)
+
+    # Replace proper names with a generic placeholder.
+    content = NAME_RE.sub("Mr. X", content)
+
+    # Replace emails with [EMAIL].
+    content = EMAIL_RE.sub("[EMAIL]", content)
+
+    return content
+
+
 def build_quality_report(df: pd.DataFrame) -> pd.DataFrame:
     total_rows = len(df)
     missing = df.isna().sum().rename("missing_count")
@@ -66,10 +95,14 @@ def build_quality_report(df: pd.DataFrame) -> pd.DataFrame:
 def clean_transactions(interim: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, float]]:
     df = interim.copy()
 
+    # Anonymize content first
+    df["content"] = df["content"].apply(anonymize_content)
+
     df["status"] = df["content"].apply(assign_status)
     df["transaction_type"] = df.apply(assign_transaction_type, axis=1)
     df["direction"] = df["direction"].astype(str).str.strip().str.lower()
     df["contact"] = df["contact"].astype(str).str.strip()
+    df["phone"] = df["phone"].astype(str).apply(lambda text: PHONE_RE.sub("XXXX", text))
 
     pre_count = len(df)
     df = df.dropna(subset=["datetime", "content"])

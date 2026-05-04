@@ -123,6 +123,15 @@ def derive_user_id(source_file: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_]+", "_", stem).lower()
 
 
+def standardize_user_ids(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, str]]:
+    """Map derived user IDs to standardized anonymized user0001-style IDs."""
+    df = df.copy()
+    unique_users = sorted(df["user_id"].dropna().unique())
+    mapping = {original: f"user{index:04d}" for index, original in enumerate(unique_users, start=1)}
+    df["user_id"] = df["user_id"].map(mapping).fillna(df["user_id"])
+    return df, mapping
+
+
 def parse_amount(text: str | float | int | None) -> float | None:
     if text is None or (isinstance(text, float) and np.isnan(text)):
         return None
@@ -203,10 +212,20 @@ def run_pipeline(raw_dirs: list[Path], output_path: Path) -> Path:
 
     combined = pd.concat(frames, ignore_index=True)
     interim = build_interim_transactions(combined)
+    interim, user_id_map = standardize_user_ids(interim)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     interim.to_csv(output_path, index=False)
+
+    mapping_path = DEFAULT_PATHS.processed_dir / "user_id_map.csv"
+    mapping_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(
+        [(original, mapped) for original, mapped in user_id_map.items()],
+        columns=["original_user_id", "user_id"],
+    ).to_csv(mapping_path, index=False)
+
     logging.info("Saved interim transactions to %s", output_path)
+    logging.info("Saved user ID mapping to %s", mapping_path)
     return output_path
 
 

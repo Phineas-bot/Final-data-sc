@@ -8,6 +8,7 @@ from pathlib import Path
 class Paths:
     project_root: Path
     raw_input_dirs: list[Path]
+    raw_dir: Path
     interim_dir: Path
     processed_dir: Path
 
@@ -18,6 +19,7 @@ DEFAULT_PATHS = Paths(
         Path(__file__).resolve().parents[1] / "data" / "raw",
         Path(__file__).resolve().parents[2] / "raw_datasets",
     ],
+    raw_dir=Path(__file__).resolve().parents[1] / "data" / "raw",
     interim_dir=Path(__file__).resolve().parents[1] / "data" / "interim",
     processed_dir=Path(__file__).resolve().parents[1] / "data" / "processed",
 )

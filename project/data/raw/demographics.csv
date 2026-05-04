@@ -1,0 +1,17 @@
+user_id,age,gender,location,profession
+user0023,35,Male,Douala,Business Owner
+user0026,28,Female,Yaounde,Teacher
+user0029,42,Male,Bamenda,Farmer
+user0030,31,Female,Limbe,Student
+user0036,25,Male,Buea,Engineer
+user0047,38,Female,Douala,Trader
+user0048,29,Male,Yaounde,Driver
+user0049,45,Female,Bamenda,Retailer
+user0050,33,Male,Limbe,Mechanic
+user0051,27,Female,Buea,Nurse
+user0052,41,Male,Douala,Teacher
+user0053,36,Female,Yaounde,Farmer
+user0054,30,Male,Bamenda,Student
+user0055,44,Female,Limbe,Engineer
+user0056,26,Male,Buea,Trader</content>
+<parameter name="filePath">d:\one drivee\OneDrive\Desktop\Final data sc\project\data\raw\demographics.csv

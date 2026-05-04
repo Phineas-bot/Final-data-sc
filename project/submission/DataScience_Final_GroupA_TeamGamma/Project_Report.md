@@ -21,14 +21,18 @@ Raw SMS exports were collected from MobileMoney and OrangeMoney sources, then pa
 
 Privacy measures:
 - All user identifiers are anonymized.
+- Personal information (names, phone numbers, account numbers, emails) is redacted from message content.
 - No personal identifiers are included in the cleaned dataset.
 - Data storage and handling follow secure project standards.
+
+Demographic data was synthesized for each user including age, gender, location, and profession to enhance model fairness and provide insights into usage patterns across different user segments.
 
 ## Data Cleaning and Preparation
 
 The cleaning process transformed raw SMS logs into an analysis-ready dataset by:
 - Normalizing headers from both `.csv` and `.xlsx` sources.
 - Standardizing dates and text content.
+- **Anonymizing sensitive information** including names, phone numbers, account numbers, and email addresses using regex patterns.
 - Tagging transaction types and failed status from message text.
 - Removing OTP, promotional messages, and duplicate records.
 - Preserving activity signals from balance checks, adjustments, and failed attempts.
@@ -55,8 +59,9 @@ A macro F1 score was chosen as the primary evaluation metric because it treats e
 
 Feature preparation included:
 - Scaling numeric features with `StandardScaler`.
-- One-hot encoding categorical features where needed.
+- One-hot encoding categorical features including demographic variables (gender, location, profession).
 - Dropping metadata columns such as `user_id` and threshold values.
+- Incorporating demographic data (age, gender, location, profession) to enhance model fairness and provide insights across user segments.
 
 ## Results and Interpretation
 
@@ -89,7 +94,7 @@ The analysis supports the following actions:
 Limitations:
 - The sample size is limited and model performance may vary with more data.
 - SMS parsing can misclassify edge cases due to mixed language and varying message formats.
-- The model is based solely on transactional behavior and does not include demographic or contextual features.
+- The model incorporates demographic features but these are synthesized and may not perfectly represent real user characteristics.
 
 Ethical guidance:
 - Use model outputs as segmentation signals, not as final decisions.
