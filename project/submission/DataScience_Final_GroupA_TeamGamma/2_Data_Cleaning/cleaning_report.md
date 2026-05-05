@@ -13,6 +13,7 @@ The cleaning stage prepared raw SMS export data for analysis by removing noise, 
 - Loaded anonymized SMS exports and standardized message text for reliable pattern detection.
 - Identified failed or declined transactions using failure-related terms in the SMS content.
 - Inferred transaction types from text when the provided `transaction_type` was ambiguous or missing.
+- Generated a unique `transaction_id` per message for row-level tracking in the cleaned output.
 - Filtered out OTP and promotional messages because they do not represent transactional behavior.
 - Preserved balance checks and adjustment messages as signals of user engagement.
 - Retained failed attempts as important evidence of attempted activity.
@@ -24,11 +25,12 @@ The cleaning stage prepared raw SMS export data for analysis by removing noise, 
 - Assigned a clean `status` label to support later segmentation and feature engineering.
 
 ## Results
-- Raw rows: 25,996
-- Cleaned rows: 2,261
-- Drop rate: 91.30%
+- Raw rows: 26,012
+- Cleaned rows: 2,464
+- Drop rate: 90.53%
 - The cleaned dataset balances noise reduction with the need to preserve meaningful behavior signals.
 
 ## Notes
 - The final cleaned data is saved as `cleaned_data.csv`.
 - The `data_quality_report.csv` file provides per-column missing-rate diagnostics.
+- The `transaction_id` column uniquely identifies each message in the cleaned dataset.

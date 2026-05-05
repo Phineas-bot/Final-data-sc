@@ -4,6 +4,7 @@ import argparse
 import logging
 import re
 import unicodedata
+import uuid
 from pathlib import Path
 
 import numpy as np
@@ -123,6 +124,11 @@ def derive_user_id(source_file: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_]+", "_", stem).lower()
 
 
+def generate_transaction_id(source_file: str, row_index: int) -> str:
+    key = f"{source_file}|{row_index}"
+    return f"txn-{uuid.uuid5(uuid.NAMESPACE_DNS, key)}"
+
+
 def standardize_user_ids(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, str]]:
     """Map derived user IDs to standardized anonymized user0001-style IDs."""
     df = df.copy()
@@ -180,11 +186,17 @@ def build_interim_transactions(df: pd.DataFrame) -> pd.DataFrame:
     df["amount"] = df["content"].apply(parse_amount)
     df["transaction_type"] = df["content"].apply(classify_transaction)
     df["currency"] = "XAF"
+    df = df.reset_index(drop=True)
+    df["transaction_id"] = [
+        generate_transaction_id(source_file, idx)
+        for idx, source_file in enumerate(df["source_file"].tolist())
+    ]
 
     return df[
         [
             "source_file",
             "user_id",
+            "transaction_id",
             "date",
             "time",
             "datetime",

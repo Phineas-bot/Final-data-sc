@@ -19,6 +19,8 @@ Mobile money services are increasingly important in financial inclusion and dail
 
 Raw SMS exports were collected from MobileMoney and OrangeMoney sources, then paired with project documentation including consent forms and questionnaire summaries. Each data row contains anonymized `user_id`, `datetime`, `transaction_type`, `amount`, and message `content`.
 
+For traceability, each message is also assigned a unique `transaction_id` during processing.
+
 Privacy measures:
 - All user identifiers are anonymized.
 - Personal information (names, phone numbers, account numbers, emails) is redacted from message content.
@@ -37,7 +39,7 @@ The cleaning process transformed raw SMS logs into an analysis-ready dataset by:
 - Removing OTP, promotional messages, and duplicate records.
 - Preserving activity signals from balance checks, adjustments, and failed attempts.
 
-The cleaned dataset contains 2,261 rows out of 25,996 raw records, representing a focused set of valid mobile money activity events.
+The cleaned dataset contains 2,464 rows out of 26,012 raw records, representing a focused set of valid mobile money activity events.
 
 ## Exploratory Data Analysis
 

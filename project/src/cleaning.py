@@ -102,7 +102,9 @@ def clean_transactions(interim: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, f
     df["transaction_type"] = df.apply(assign_transaction_type, axis=1)
     df["direction"] = df["direction"].astype(str).str.strip().str.lower()
     df["contact"] = df["contact"].astype(str).str.strip()
-    df["phone"] = df["phone"].astype(str).apply(lambda text: PHONE_RE.sub("XXXX", text))
+    df["phone"] = df["phone"].apply(
+        lambda text: PHONE_RE.sub("XXXX", "" if pd.isna(text) else str(text))
+    )
 
     pre_count = len(df)
     df = df.dropna(subset=["datetime", "content"])
