@@ -1,0 +1,71 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "remove-venvs",
+			"type": "shell",
+			"command": "Remove-Item",
+			"args": [
+				"-LiteralPath",
+				".venv",
+				".venv-1",
+				".venv-2",
+				"-Recurse",
+				"-Force",
+				"-ErrorAction",
+				"Stop"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "remove-venvs-fixed",
+			"type": "shell",
+			"command": "Remove-Item -LiteralPath @('.venv','.venv-1','.venv-2') -Recurse -Force -ErrorAction Stop",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "inspect-venv-processes",
+			"type": "shell",
+			"command": "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*\\.venv*' } | Select-Object ProcessId, Name, CommandLine | Format-List",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "kill-kernels-and-remove-venvs",
+			"type": "shell",
+			"command": "$pids = Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'python.exe' -and ($_.CommandLine -like '*\\.venv\\*' -or $_.CommandLine -like '*\\.venv-1\\*') } | Select-Object -ExpandProperty ProcessId; if ($pids) { Stop-Process -Id $pids -Force }; Remove-Item -LiteralPath @('.venv','.venv-1') -Recurse -Force -ErrorAction Stop; Write-Output 'removed venv folders'",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "recheck-venv-processes",
+			"type": "shell",
+			"command": "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'python.exe' -and ($_.CommandLine -like '*\\.venv*') } | Select-Object ProcessId, Name, CommandLine | Format-List",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "delete-venv-folders-final",
+			"type": "shell",
+			"command": "Remove-Item -LiteralPath @('.venv','.venv-1') -Recurse -Force -ErrorAction Stop; Write-Output 'removed venv folders'",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		},
+		{
+			"label": "delete-venv1",
+			"type": "shell",
+			"command": "Set-Location 'D:\\one drivee\\OneDrive\\Desktop\\Final data sc'; Remove-Item -LiteralPath '.venv-1' -Recurse -Force -ErrorAction Stop; Write-Output 'removed .venv-1'",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		}
+	]
+}

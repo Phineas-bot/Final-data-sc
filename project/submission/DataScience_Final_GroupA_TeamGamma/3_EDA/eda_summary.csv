@@ -1,8 +1,8 @@
 metric,value
 unique_users,14
-total_transactions,2261
-balance_messages,1705
-failed_messages,77
+total_transactions,2468
+balance_messages,2144
+failed_messages,76
 high_activity_users,5
 medium_activity_users,4
 low_activity_users,5
