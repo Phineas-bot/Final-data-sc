@@ -1,0 +1,16 @@
+column,missing_rate
+source_file,0.0
+user_id,0.0
+date,0.0
+time,0.0
+datetime,0.0
+direction,0.0
+contact,0.0
+phone,0.0
+type,0.0
+transaction_type,0.0
+amount,0.0
+currency,0.0
+content,0.0
+transaction_id,0.0
+status,0.0

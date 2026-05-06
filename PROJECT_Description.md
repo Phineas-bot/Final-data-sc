@@ -91,10 +91,13 @@ Collect through questionnaire:
 
 #### Deliverables:
 
-- Raw anonymized dataset (CSV/Excel)
-- Consent form template (PDF)
-- Data collection questionnaire (PDF)
-- Data collection report (1 page): sampling strategy, challenges, quality assurance
+Raw anonymized dataset (CSV/Excel)
+
+Consent form template (PDF)
+
+Data collection questionnaire (PDF)
+
+* Data collection report (1 page): sampling strategy, challenges, quality assurance
 
 ---
 
@@ -430,7 +433,7 @@ DataScience_Final_GroupX_[GroupName]/
 ├── 4_Modeling/
 │ ├── modeling_notebook.ipynb (or .Rmd)
 │ ├── model_comparison_report.pdf
-│ ├── best_model.pkl (or .joblib)
+│ ├── best_model.pkl 
 │ └── performance_summary.pdf
 ├── 5_Interpretation/
 │ ├── interpretation_report.pdf
@@ -443,6 +446,5 @@ DataScience_Final_GroupX_[GroupName]/
 └── CONTRIBUTIONS.md
 
 **Deadline:** Sunday, [Date], 2025 11:59 PM WAT
-
 
 YOU ARE REQUIRED TO USE BEST PRACTICES.

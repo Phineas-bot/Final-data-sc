@@ -61,7 +61,7 @@ def main() -> None:
     )
     run_interpretation(
         features_path,
-        DEFAULT_PATHS.project_root / "models" / "best_model.joblib",
+        DEFAULT_PATHS.project_root / "models" / "best_model.pkl",
         DEFAULT_PATHS.project_root / "outputs" / "interpretation",
     )
 

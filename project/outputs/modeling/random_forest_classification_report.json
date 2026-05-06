@@ -1,20 +1,20 @@
 {
   "high": {
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1-score": 0.0,
-    "support": 1.0
-  },
-  "low": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
     "support": 1.0
   },
-  "medium": {
+  "low": {
     "precision": 0.5,
     "recall": 1.0,
     "f1-score": 0.6666666666666666,
+    "support": 1.0
+  },
+  "medium": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
     "support": 1.0
   },
   "accuracy": 0.6666666666666666,
